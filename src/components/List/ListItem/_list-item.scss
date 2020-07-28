@@ -1,5 +1,10 @@
 @import '../../../globals/vars';
 
+.#{$iot-prefix}--list-item-editable:hover {
+  background: $ui-03;
+  cursor: grab;
+}
+
 .#{$iot-prefix}--list-item {
   background: $ui-01;
   border-bottom: 1px solid $ui-03;
@@ -9,6 +14,10 @@
   padding: $spacing-03 $spacing-03 $spacing-03 $spacing-05;
   align-items: center;
   overflow-x: hidden;
+
+  &--handle {
+    fill: $ibm-color__gray-100;
+  }
 
   &__large {
     height: rem(96px);

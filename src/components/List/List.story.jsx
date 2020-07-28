@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { text, boolean } from '@storybook/addon-knobs';
-import { Add16, Edit16, Star16 } from '@carbon/icons-react';
+import { Add16, Edit16, Star16, Close16, Checkmark16 } from '@carbon/icons-react';
 import cloneDeep from 'lodash/cloneDeep';
 import someDeep from 'deepdash/someDeep';
 
@@ -460,4 +460,63 @@ storiesOf('Watson IoT Experimental/List', module)
       );
     };
     return <MultiSelectList />;
+  })
+  .add('basic (single column) with reorder', () => {
+    const SingleColumnReorder = () => {
+      const startData = Object.entries(
+        sampleHierarchy.MLB['American League']['New York Yankees']
+      ).map(([key]) => ({
+        id: key,
+        content: { value: key },
+      }));
+
+      const [listItems, setListItems] = useState(startData);
+      const editing = boolean('isEditing,', true);
+
+      const onItemMoved = (dragIndex, hoverIndex) => {
+        const dragCard = listItems[dragIndex];
+        listItems.splice(dragIndex, 1);
+        listItems.splice(hoverIndex, 0, dragCard);
+
+        setListItems([...listItems]);
+      };
+
+      const saveButton = (
+        <Button
+          renderIcon={Checkmark16}
+          hasIconOnly
+          size="small"
+          iconDescription="Save"
+          key="expandable-list-button-check"
+          onClick={() => action('Reordered list saved')}
+        />
+      );
+
+      const cancelButton = (
+        <Button
+          renderIcon={Close16}
+          hasIconOnly
+          kind="secondary"
+          size="small"
+          iconDescription="Cancel"
+          key="expandable-list-button-cancel"
+          onClick={() => setListItems(startData)}
+        />
+      );
+
+      return (
+        <div style={{ width: 400 }}>
+          <List
+            buttons={editing ? [cancelButton, saveButton] : []}
+            title={text('title', 'NY Yankees')}
+            items={listItems}
+            isEditing={editing}
+            isLoading={boolean('isLoading', false)}
+            onItemMoved={onItemMoved}
+          />
+        </div>
+      );
+    };
+
+    return <SingleColumnReorder />;
   });
